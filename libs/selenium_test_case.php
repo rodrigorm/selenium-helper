@@ -17,11 +17,25 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
-			$this->selenium = new Testing_Selenium('*firefox', 'http://localhost:8888/');
+			$this->selenium = new Testing_Selenium($this->_getBrowser(), 'http://localhost:8888/');
 			$this->selenium->start();
 		}
 
 		return parent::before($method);
+	}
+
+	function _getBrowser() {
+		global $argv;
+		$browser = 'firefox';
+
+		foreach ($argv as $key => $arg) {
+			if ($arg == '-browser') {
+				$browser = $argv[$key + 1];
+			}
+		}
+		echo $browser, "\n";
+
+		return '*' . $browser;
 	}
 
 	function after($method) {
