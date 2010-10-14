@@ -17,7 +17,7 @@ class SeleniumHelper extends Helper {
 			$tokens = explode('_', Inflector::underscore($method));
 			
 			$allowedPrefixes = array('assert', 'verify', 'waitFor');
-			$allowedKeywords = array('alert', 'confirmation', 'prompt', 'text');
+			$allowedKeywords = array('alert', 'confirmation', 'element', 'prompt', 'text');
 			$allowedPostfixes = array('not', 'present');
 				
 			foreach ($allowedPrefixes as $prefix) {
