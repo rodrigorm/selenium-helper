@@ -24,6 +24,7 @@ class SeleniumTestCase extends CakeTestCase {
 		if (!in_array(strtolower($method), $this->methods)) {
 			$this->selenium = new Testing_Selenium($this->_getBrowser(), $this->_getUrl());
 			$this->selenium->start();
+			$this->selenium->createCookie('selenium=yes', 'path=/, max_age=10000');
 		}
 
 		return parent::before($method);
@@ -31,6 +32,7 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function after($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
+			$this->selenium->deleteCookie('selenium', 'path=/');
 			$this->selenium->stop();
 		}
 		return parent::after($method);

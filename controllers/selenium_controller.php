@@ -1,13 +1,12 @@
 <?php
 App::import('Lib', 'Selenium.SeleniumTestManager');
 
-class SeleniumController extends AppController{
+class SeleniumController extends AppController {
 	public $helpers = array('Html', 'Selenium.Selenium');
 	public $uses = array();
 
 	function index() {
 		$this->layout = 'testsuite';
-
 		$testcases =& SeleniumTestManager::getTestCaseList();
 		$this->set(compact('testcases'));
 	}

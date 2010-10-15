@@ -2225,6 +2225,12 @@ class Testing_Selenium
     }
 
 
+    public function waitForElementPresent($locator, $timeout)
+    {
+        $this->doCommand("waitForElementPresent", array($locator, $timeout));
+    }
+
+
     /**
      * Specifies the amount of time that Selenium will wait for actions to complete.
      * 
