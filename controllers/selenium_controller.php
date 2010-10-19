@@ -22,4 +22,9 @@ class SeleniumController extends AppController {
 
 		$this->set(compact('case', 'plugin'));
 	}
+
+	function cookie() {
+		setcookie('selenium', 'yes', strtotime('+10 seconds'), '/');
+		exit('Cookie created');
+	}
 }

@@ -21,7 +21,8 @@ class SeleniumTestCase extends CakeTestCase {
 			if ($speed) {
 				$this->selenium->setSpeed($speed);
 			}
-			$this->selenium->createCookie('selenium=yes', 'path=/, max_age=10000');
+			$this->selenium->open('/selenium/selenium/cookie');
+			$this->assertTrue($this->selenium->isCookiePresent('selenium'));
 		}
 
 		return parent::before($method);
