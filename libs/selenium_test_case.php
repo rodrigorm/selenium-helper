@@ -16,7 +16,7 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
-			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl());
+			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl(), $this->_getHost());
 			$speed = $this->_getSpeed();
 			if ($speed) {
 				$this->selenium->setSpeed($speed);
@@ -45,6 +45,10 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function _getSpeed() {
 		return $this->_getArg('speed', false);
+	}
+
+	function _getHost() {
+		return $this->_getArg('host', 'localhost');
 	}
 
 	function _getArg($name, $default = '') {

@@ -40,12 +40,16 @@ class SeleniumServer {
 		return false;
 	}
 
-	static function client($browser, $url) {
+	static function client($browser, $url, $host = 'localhost', $port = 4444) {
 		if (!SeleniumServer::running()) {
 			return false;
 		}
 
-		$client = new Testing_Selenium($browser, $url);
+		if (empty($port) && strpos($host, ':') !== false) {
+			list($host, $port) = explode(':', $host, 2);
+		}
+
+		$client = new Testing_Selenium($browser, $url, $host, $port);
 		do {
 			$started = false;
 			try {
