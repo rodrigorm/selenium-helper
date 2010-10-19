@@ -81,4 +81,8 @@ class SeleniumTestCase extends CakeTestCase {
 			exit;
 		}
 	}
+
+	function getLocalLocation() {
+		return str_replace($this->_getUrl(), '/', $this->getLocation());
+	}
 }
