@@ -17,6 +17,7 @@ class SeleniumTestCase extends CakeTestCase {
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
 			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl());
+			$this->selenium->createCookie('selenium=yes', 'path=/, max_age=10000');
 		}
 
 		return parent::before($method);

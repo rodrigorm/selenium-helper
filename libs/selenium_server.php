@@ -48,7 +48,6 @@ class SeleniumServer {
 				$started = @$client->start();
 			} catch (Exception $e) {}
 		} while(SeleniumServer::running() && !$started);
-		$client->createCookie('selenium=yes', 'path=/, max_age=10000');
 		return $client;
 	}
 }
