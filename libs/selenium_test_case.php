@@ -17,6 +17,10 @@ class SeleniumTestCase extends CakeTestCase {
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
 			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl());
+			$speed = $this->_getSpeed();
+			if ($speed) {
+				$this->selenium->setSpeed($speed);
+			}
 			$this->selenium->createCookie('selenium=yes', 'path=/, max_age=10000');
 		}
 
@@ -37,6 +41,10 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function _getUrl() {
 		return $this->_getArg('url', 'http://localhost:8888/');
+	}
+
+	function _getSpeed() {
+		return $this->_getArg('speed', false);
 	}
 
 	function _getArg($name, $default = '') {
