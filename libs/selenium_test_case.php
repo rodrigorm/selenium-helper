@@ -1,4 +1,5 @@
 <?php
+App::import('Lib', 'Selenium.SeleniumServer');
 App::import('Vendor', 'Selenium.Testing_Selenium', array('file' => 'remote-control' . DS . 'Testing' . DS . 'Selenium.php'));
 
 class SeleniumTestCase extends CakeTestCase {
@@ -7,24 +8,15 @@ class SeleniumTestCase extends CakeTestCase {
  */
 	var $selenium;
 
-/**
- * Hold complete path to selenium-server.jar
- */
-	var $server;
-
 	function start() {
 		$this->__installSeleniumRC();
-		$java = exec('which java');
-		$command = $java . ' -jar ' . $this->server . ' > /dev/null 2>&1 &';
-		exec($command);
+		SeleniumServer::start();
 		return parent::start();
 	}
 
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
-			$this->selenium = new Testing_Selenium($this->_getBrowser(), $this->_getUrl());
-			$this->selenium->start();
-			$this->selenium->createCookie('selenium=yes', 'path=/, max_age=10000');
+			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl());
 		}
 
 		return parent::before($method);
@@ -36,6 +28,10 @@ class SeleniumTestCase extends CakeTestCase {
 			$this->selenium->stop();
 		}
 		return parent::after($method);
+	}
+
+	function end() {
+		SeleniumServer::stop();
 	}
 
 	function _getBrowser() {
@@ -69,14 +65,9 @@ class SeleniumTestCase extends CakeTestCase {
  * @access private
  */
 	function __installSeleniumRC() {
-		$paths = App::path('vendors');
-		foreach ($paths as $path) {
-			if (file_exists($path . 'selenium-server' . DS . 'selenium-server.jar')) {
-				$this->server = $path . 'selenium-server' . DS . 'selenium-server.jar';
-				return;
-			}
+		if (!SeleniumServer::install()) {
+			$this->err(__('Sorry, Selenium RC could not be found. Download it from http://seleniumhq.org/ and install it to your vendors directory.', true));
+			exit;
 		}
-		$this->err(__('Sorry, Selenium RC could not be found. Download it from http://seleniumhq.org/ and install it to your vendors directory.', true));
-		exit;
 	}
 }
