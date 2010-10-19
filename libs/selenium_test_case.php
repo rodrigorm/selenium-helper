@@ -44,6 +44,9 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function _getArg($name, $default = '') {
 		global $argv;
+		if (empty($argv)) {
+			return $default;
+		}
 		$argName = '-' . $name;
 		foreach ($argv as $key => $arg) {
 			if ($arg == $argName) {
