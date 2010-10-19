@@ -50,6 +50,9 @@ class SeleniumTestCase extends CakeTestCase {
 	function _getArg($name, $default = '') {
 		global $argv;
 		if (empty($argv)) {
+			if (!empty($_GET[$name])) {
+				return $_GET[$name];
+			}
 			return $default;
 		}
 		$argName = '-' . $name;
