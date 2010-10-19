@@ -1,9 +1,10 @@
 <?php
 class SeleniumServer {
-	static $server;
+	static $server = false;
 	static $pid = false;
-	
+
 	static function start() {
+		SeleniumServer::_getPid();
 		if (!SeleniumServer::install()) {
 			return false;
 		}
@@ -13,19 +14,22 @@ class SeleniumServer {
 		$java = exec('which java');
 		$command = $java . ' -jar ' . SeleniumServer::$server . ' > /dev/null 2>&1 & echo $!';
 		exec($command, $op);
-		SeleniumServer::$pid = (int)$op[0];
+		SeleniumServer::_setPid((int)$op[0]);
 		return SeleniumServer::running();
 	}
 
-	function stop() {
-		posix_kill(SeleniumServer::$pid, 9);
+	static function stop() {
+		posix_kill(SeleniumServer::_getPid(), 9);
 	}
 
-	function running() {
+	static function running() {
 		return SeleniumServer::$pid && posix_kill(SeleniumServer::$pid, 0);
 	}
 
-	function install() {
+	static function install() {
+		if (SeleniumServer::$server) {
+			return true;
+		}
 		$paths = App::path('vendors');
 		foreach ($paths as $path) {
 			if (file_exists($path . 'selenium-server' . DS . 'selenium-server.jar')) {
@@ -36,7 +40,7 @@ class SeleniumServer {
 		return false;
 	}
 
-	function client($browser, $url) {
+	static function client($browser, $url) {
 		if (!SeleniumServer::running()) {
 			return false;
 		}
@@ -49,5 +53,29 @@ class SeleniumServer {
 			} catch (Exception $e) {}
 		} while(SeleniumServer::running() && !$started);
 		return $client;
+	}
+
+	static function _setPid($pid) {
+		SeleniumServer::$pid = $pid;
+		$pidFile = SeleniumServer::_pidFile();
+		file_put_contents($pidFile, $pid);
+	}
+
+	static function _getPid() {
+		if (SeleniumServer::running()) {
+			return SeleniumServer::$pid;
+		}
+
+		$pidFile = SeleniumServer::_pidFile();
+		if (!file_exists($pidFile)) {
+			return false;
+		}
+		SeleniumServer::$pid = (int)file_get_contents($pidFile);
+		return SeleniumServer::$pid;
+	}
+
+	static function _pidFile() {
+		SeleniumServer::install();
+		return '/tmp/selenium_server_' . md5(SeleniumServer::$server) . '.pid';
 	}
 }

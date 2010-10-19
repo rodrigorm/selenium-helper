@@ -31,10 +31,6 @@ class SeleniumTestCase extends CakeTestCase {
 		return parent::after($method);
 	}
 
-	function end() {
-		SeleniumServer::stop();
-	}
-
 	function _getBrowser() {
 		return $this->_getArg('browser', 'firefox');
 	}
