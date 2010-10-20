@@ -18,6 +18,7 @@ class SeleniumTestCase extends CakeTestCase {
 			'port'    => 4444
 		);
 		$this->settings = array_merge($defaults, $settings);
+		return parent::start();
 	}
 
 	function before($method) {
