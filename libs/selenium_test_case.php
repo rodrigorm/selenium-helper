@@ -1,22 +1,36 @@
 <?php
-App::import('Lib', 'Selenium.SeleniumServer');
 App::import('Vendor', 'Selenium.Testing_Selenium', array('file' => 'remote-control' . DS . 'Testing' . DS . 'Selenium.php'));
 
 class SeleniumTestCase extends CakeTestCase {
-/**
- * Hold Testing_Selenium object
- */
 	var $selenium;
 
+	var $settings;
+
 	function start() {
-		$this->__installSeleniumRC();
-		SeleniumServer::start();
-		return parent::start();
+		$defaults = Configure::read('Selenium');
+		if (!is_array($defaults)) {
+			$defaults = array();
+		}
+		$settings = array(
+			'browser' => $this->_getBrowser(),
+			'url'     => $this->_getUrl(),
+			'host'    => $this->_getHost(),
+			'port'    => 4444
+		);
+		$this->settings = array_merge($defaults, $settings);
 	}
 
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
-			$this->selenium = SeleniumServer::client($this->_getBrowser(), $this->_getUrl(), $this->_getHost());
+			extract($this->settings);
+
+			if (empty($port) && strpos($host, ':') !== false) {
+				list($host, $port) = explode(':', $host, 2);
+			}
+
+			$this->selenium = new Testing_Selenium($browser, $url, $host, $port);
+			$this->selenium->start();
+			
 			$speed = $this->_getSpeed();
 			if ($speed) {
 				$this->selenium->setSpeed($speed);
@@ -72,19 +86,6 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function __call($method, $params) {
 		return call_user_func_array(array($this->selenium, $method), $params);
-	}
-
-/**
- * tries to install Selenium RC and exits gracefully if it is not there
- *
- * @return void
- * @access private
- */
-	function __installSeleniumRC() {
-		if (!SeleniumServer::install()) {
-			$this->err(__('Sorry, Selenium RC could not be found. Download it from http://seleniumhq.org/ and install it to your vendors directory.', true));
-			exit;
-		}
 	}
 
 	function getLocalLocation() {
