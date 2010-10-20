@@ -7,16 +7,17 @@ class SeleniumTestCase extends CakeTestCase {
 	var $settings;
 
 	function start() {
-		$defaults = Configure::read('Selenium');
-		if (!is_array($defaults)) {
-			$defaults = array();
-		}
-		$settings = array(
+		$defaults = array(
 			'browser' => $this->_getBrowser(),
 			'url'     => $this->_getUrl(),
 			'host'    => $this->_getHost(),
-			'port'    => 4444
+			'port'    => 4444,
+			'speed'   => $this->_getSpeed()
 		);
+		$settings = Configure::read('Selenium');
+		if (!is_array($settings)) {
+			$settings = array();
+		}
 		$this->settings = array_merge($defaults, $settings);
 		return parent::start();
 	}
@@ -32,9 +33,8 @@ class SeleniumTestCase extends CakeTestCase {
 			$this->selenium = new Testing_Selenium($browser, $url, $host, $port);
 			$this->selenium->start();
 			
-			$speed = $this->_getSpeed();
-			if ($speed) {
-				$this->selenium->setSpeed($speed);
+			if ($this->settings['speed']) {
+				$this->selenium->setSpeed($this->settings['speed']);
 			}
 			$this->selenium->open('/selenium/selenium/cookie');
 			$this->assertTrue($this->selenium->isCookiePresent('selenium'));
@@ -90,6 +90,6 @@ class SeleniumTestCase extends CakeTestCase {
 	}
 
 	function getLocalLocation() {
-		return str_replace($this->_getUrl(), '/', $this->getLocation());
+		return str_replace($this->settings['url'], '/', $this->getLocation());
 	}
 }
