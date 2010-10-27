@@ -1219,7 +1219,7 @@ class Testing_Selenium
      * @param string $windowID the JavaScript window "name" of the window that will appear (not the text of the title bar)                 If unspecified, or specified as "null", this command will                 wait for the first non-top window to appear (don't rely                 on this if you are working with multiple popups                 simultaneously).
      * @param string $timeout a timeout in milliseconds, after which the action will return with an error.                If this value is not specified, the default Selenium                timeout will be used. See the setTimeout() command.
      */
-    public function waitForPopUp($windowID, $timeout)
+    public function waitForPopUp($windowID, $timeout = 3000)
     {
         $this->doCommand("waitForPopUp", array($windowID, $timeout));
     }
@@ -2219,13 +2219,13 @@ class Testing_Selenium
      * @param string $script the JavaScript snippet to run
      * @param string $timeout a timeout in milliseconds, after which this command will return with an error
      */
-    public function waitForCondition($script, $timeout)
+    public function waitForCondition($script, $timeout = 3000)
     {
         $this->doCommand("waitForCondition", array($script, $timeout));
     }
 
 
-    public function waitForElementPresent($locator, $timeout)
+    public function waitForElementPresent($locator, $timeout = 3000)
     {
         $this->doCommand("waitForElementPresent", array($locator, $timeout));
     }
@@ -2264,7 +2264,7 @@ class Testing_Selenium
      * @access public
      * @param string $timeout a timeout in milliseconds, after which this command will return with an error
      */
-    public function waitForPageToLoad($timeout)
+    public function waitForPageToLoad($timeout = 3000)
     {
         $this->doCommand("waitForPageToLoad", array($timeout));
     }
@@ -2284,7 +2284,7 @@ class Testing_Selenium
      * @param string $frameAddress FrameAddress from the server side
      * @param string $timeout a timeout in milliseconds, after which this command will return with an error
      */
-    public function waitForFrameToLoad($frameAddress, $timeout)
+    public function waitForFrameToLoad($frameAddress, $timeout = 3000)
     {
         $this->doCommand("waitForFrameToLoad", array($frameAddress, $timeout));
     }
