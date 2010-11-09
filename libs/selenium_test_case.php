@@ -6,7 +6,7 @@ class SeleniumTestCase extends CakeTestCase {
 
 	var $settings;
 
-	function start() {
+	function SeleniumTestCase() {
 		$defaults = Configure::read('Selenium');
 		if (!is_array($defaults)) {
 			$defaults = array();
@@ -17,21 +17,32 @@ class SeleniumTestCase extends CakeTestCase {
 			'host'    => $this->_getHost(),
 			'port'    => 4444
 		);
-		$this->settings = array_merge($defaults, $settings);
-		return parent::start();
+		$settings = array_merge($defaults, $settings);
+
+		if (empty($settings['port']) && strpos($settings['host'], ':') !== false) {
+			list($settings['host'], $settings['port']) = explode(':', $settings['host'], 2);
+		}
+
+		$this->settings = $settings;
+	}
+
+	function skip() {
+		extract($this->settings);
+		try {
+			$selenium = new Testing_Selenium($browser, $url, $host, $port);
+			$selenium->start();
+		} catch (Exception $e) {
+			$this->skipIf(true, $e->getMessage());
+		}
 	}
 
 	function before($method) {
 		if (!in_array(strtolower($method), $this->methods)) {
 			extract($this->settings);
 
-			if (empty($port) && strpos($host, ':') !== false) {
-				list($host, $port) = explode(':', $host, 2);
-			}
-
 			$this->selenium = new Testing_Selenium($browser, $url, $host, $port);
 			$this->selenium->start();
-			
+
 			$speed = $this->_getSpeed();
 			if ($speed) {
 				$this->selenium->setSpeed($speed);
