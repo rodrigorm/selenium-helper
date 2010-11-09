@@ -19,7 +19,7 @@ class SeleniumTestCase extends CakeTestCase {
 		);
 		$settings = array_merge($defaults, $settings);
 
-		if (empty($settings['port']) && strpos($settings['host'], ':') !== false) {
+		if (empty($settings['port']) || strpos($settings['host'], ':') !== false) {
 			list($settings['host'], $settings['port']) = explode(':', $settings['host'], 2);
 		}
 
