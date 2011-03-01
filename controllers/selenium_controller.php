@@ -24,7 +24,7 @@ class SeleniumController extends AppController {
 	}
 
 	function cookie() {
-		setcookie('selenium', 'yes', strtotime('+10 seconds'), '/');
+		setcookie('selenium', 'yes', strtotime('+60 seconds'), '/');
 		exit('Cookie created');
 	}
 }

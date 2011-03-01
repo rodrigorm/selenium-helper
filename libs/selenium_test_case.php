@@ -52,7 +52,7 @@ class SeleniumTestCase extends CakeTestCase {
 	}
 
 	function _getBrowser() {
-		return $this->_getArg('browser', 'firefox');
+		return $this->_getArg('browser', '*firefox');
 	}
 
 	function _getUrl() {

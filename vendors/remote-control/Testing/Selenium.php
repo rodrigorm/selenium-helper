@@ -1757,7 +1757,6 @@ class Testing_Selenium
         return $this->getBoolean("isTextPresent", array($pattern));
     }
 
-
     /**
      * Verifies that the specified element is somewhere on the page.
      *
@@ -2150,6 +2149,10 @@ class Testing_Selenium
         return $this->getNumber("getXpathCount", array($xpath));
     }
 
+    public function waitForXpathCount($xpath, $pattern)
+    {
+        return $this->getNumber("waitForXpathCount", array($xpath, $pattern));
+    }
 
     /**
      * Temporarily sets the "id" attribute of the specified element, so you can locate it in the future
@@ -2228,6 +2231,16 @@ class Testing_Selenium
     public function waitForElementPresent($locator, $timeout = 3000)
     {
         $this->doCommand("waitForElementPresent", array($locator, $timeout));
+    }
+
+    public function waitForVisible($locator, $timeout = 3000)
+    {
+        $this->doCommand("waitForVisible", array($locator, $timeout));
+    }
+
+    public function waitForNotVisible($locator, $timeout = 3000)
+    {
+        $this->doCommand("waitForNotVisible", array($locator, $timeout));
     }
 
 
