@@ -26,10 +26,6 @@ class SeleniumTestCase extends CakeTestCase {
 		if (!in_array(strtolower($method), $this->methods)) {
 			extract($this->settings);
 
-			if (empty($port) || strpos($host, ':') !== false) {
-				list($host, $port) = explode(':', $host, 2);
-			}
-
 			$this->selenium = new Testing_Selenium($browser, $url, $host, $port);
 			$this->selenium->start();
 			
