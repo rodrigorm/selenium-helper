@@ -1,62 +1,31 @@
 <?php
-class SeleniumTestManager {
-	var $_testExtension = '.test.php';
+require_once CAKE . 'tests' . DS . 'lib' . DS . 'test_manager.php';
 
-	function &getTestCaseList() {
-		$manager =& new SeleniumTestManager();
-		$return = $manager->_getTestCaseList();
-		return $return;
-	}
-
-	function &_getTestCaseList() {
-		$return = array(
-			'app' => $this->_getTestFileList(TESTS . 'selenium'),
-			'plugins' => array()
-		);
-		$plugins = App::objects('plugin');
-		$pluginPaths = App::path('plugins');
-		foreach ($plugins as $plugin) {
-			$pluginFileList = array();
-			foreach ($pluginPaths as $pluginPath) {
-				$pluginFileList = array_merge($pluginFileList, $this->_getTestFileList($pluginPath . $plugin . DS . 'tests' . DS . 'selenium'));
+class SeleniumTestManager extends TestManager {
+/**
+ * Returns the given path to the test files depending on a given type of tests (cases, group, ..)
+ *
+ * @param string $type either 'cases' or 'groups'
+ * @return string The path tests are located on
+ * @access protected
+ */
+	function _getTestsPath($type = 'cases') {
+		if (!empty($this->appTest)) {
+			if ($type == 'cases') {
+				$result = TESTS . 'selenium' . DS . 'cases' . DS;
+			} else if ($type == 'groups') {
+				$result = TESTS . 'selenium' . DS . 'groups' . DS;
 			}
-			$return['plugins'][$plugin] = $pluginFileList;
-		}
-		return $return;
-	}
-
-	function &_getTestFileList($directory = '.') {
-		$return = $this->_getRecursiveFileList($directory, array(&$this, '_isTestCaseFile'));
-		foreach ($return as $key => $testCaseFile) {
-			$return[$key] = str_replace($directory . DS, '', $testCaseFile);
-		}
-		return $return;
-	}
-
-	function &_getRecursiveFileList($directory = '.', $fileTestFunction) {
-		$fileList = array();
-		if (!is_dir($directory)) {
-			return $fileList;
-		}
-
-		$files = glob($directory . DS . '*');
-		$files = $files ? $files : array();
-
-		foreach ($files as $file) {
-			if (is_dir($file)) {
-				$fileList = array_merge($fileList, $this->_getRecursiveFileList($file, $fileTestFunction));
-			} elseif ($fileTestFunction[0]->$fileTestFunction[1]($file)) {
-				$fileList[] = $file;
+		} else if (!empty($this->pluginTest)) {
+			$_pluginBasePath = APP . 'plugins' . DS . $this->pluginTest . DS . 'tests';
+			$pluginPath = App::pluginPath($this->pluginTest);
+			if (file_exists($pluginPath . DS . 'tests')) {
+				$_pluginBasePath = $pluginPath . DS . 'tests';
 			}
+			$result = $_pluginBasePath . DS . 'selenium' . DS . $type;
+		} else {
+			$result = false;
 		}
-		return $fileList;
-	}
-
-	function _isTestCaseFile($file) {
-		return $this->_hasExpectedExtension($file, $this->_testExtension);
-	}
-
-	function _hasExpectedExtension($file, $extension) {
-		return $extension == strtolower(substr($file, (0 - strlen($extension))));
+		return $result;
 	}
 }

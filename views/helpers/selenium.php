@@ -52,7 +52,7 @@ class SeleniumHelper extends Helper {
 			$allowedPrefixes = array('assertNot', 'verifyNot', 'waitForNot', 'assert', 'verify', 'waitFor');
 			$allowedKeywords = array('Alert', 'AllButtons', 'AllFields', 'AllLinks', 'AllWindowIds', 'AllWindowNames',
 									 'AllWindowTitles', 'Attribute', 'AttributeFromAllWindows', 'BodyText', 'Checked', 
-									 'Confirmation', 'Cookie', 'CursorPosition', 'Editable', 'ElementHeight', 'ElementIndex', 
+									 'Confirmation', 'Cookie', 'CookieByName', 'CursorPosition', 'Editable', 'ElementHeight', 'ElementIndex', 
 									 'ElementPositionLeft', 'ElementPositionTop', 'ElementWidth', 'ErrorOnNext', 'Eval', 
 									 'Expression', 'FailureOnNext', 'HtmlSource', 'Location', 'LogMessages', 
 									 'MouseSpeed', 'Ordered', 'Prompt', 'Selected', 'SelectedId', 'SelectedIds', 

@@ -1,9 +1,7 @@
 <?php
-App::import('Lib', 'Selenium.SeleniumTestManager');
-
 class SeleniumController extends AppController {
 	public $helpers = array('Html', 'Selenium.Selenium');
-	public $uses = array();
+	public $uses = array('Selenium.SeleniumTestCase');
 
 	function beforeFilter() {
 		if (isset($this->Auth)) {
@@ -14,7 +12,7 @@ class SeleniumController extends AppController {
 
 	function index() {
 		$this->layout = 'testsuite';
-		$testcases =& SeleniumTestManager::getTestCaseList();
+		$testcases =& $this->SeleniumTestCase->getTestCaseList();
 		$this->set(compact('testcases'));
 	}
 
