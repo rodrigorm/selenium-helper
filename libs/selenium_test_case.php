@@ -133,13 +133,13 @@ class SeleniumTestCase extends CakeTestCase {
 		$_prefix = $db->config['prefix'];
 		$db->config['prefix'] = $this->cookie . '_';
 
-		ConnectionManager::create('test_suite', $db->config);
+		ConnectionManager::create('test_suite_' . $this->cookie, $db->config);
 		$db->config['prefix'] = $_prefix;
 
 		// Get db connection
-		$this->db =& ConnectionManager::getDataSource('test_suite');
+		$this->db =& ConnectionManager::getDataSource('test_suite_' . $this->cookie);
 		$this->db->cacheSources  = false;
 
-		ClassRegistry::config(array('ds' => 'test_suite'));
+		ClassRegistry::config(array('ds' => 'test_suite_' . $this->cookie));
 	}
 }
