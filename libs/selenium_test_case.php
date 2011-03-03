@@ -6,6 +6,12 @@ class SeleniumTestCase extends CakeTestCase {
 
 	var $settings;
 
+	var $cookie;
+
+	function __construct() {
+		$this->cookie = 'stc' . rand(0, 100);
+	}
+
 	function start() {
 		$defaults = array(
 			'browser' => '*firefox',
@@ -41,8 +47,10 @@ class SeleniumTestCase extends CakeTestCase {
 			if ($this->settings['speed']) {
 				$this->selenium->setSpeed($this->settings['speed']);
 			}
-			$this->selenium->open('/selenium/selenium/cookie');
+			$this->selenium->open('/selenium/selenium/cookie/' . $this->cookie);
 			$this->assertTrue($this->selenium->isCookiePresent('selenium'));
+			$this->assertTrue($this->selenium->isTextPresent('Cookie created'));
+			$this->assertEqual($this->selenium->getCookieByName('selenium'), $this->cookie);
 		}
 
 		return parent::before($method);
@@ -96,5 +104,41 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function getLocalLocation() {
 		return str_replace($this->settings['url'], '/', $this->getLocation());
+	}
+
+/**
+ * Initialize DB connection.
+ *
+ * @return void
+ * @access protected
+ */
+	function _initDb() {
+		$testDbAvailable = in_array('test', array_keys(ConnectionManager::enumConnectionObjects()));
+
+		$_prefix = null;
+
+		if ($testDbAvailable) {
+			// Try for test DB
+			restore_error_handler();
+			@$db =& ConnectionManager::getDataSource('test');
+			set_error_handler('simpleTestErrorHandler');
+			$testDbAvailable = $db->isConnected();
+		}
+
+		// Try for default DB
+		if (!$testDbAvailable) {
+			$db =& ConnectionManager::getDataSource('default');
+		}
+		$_prefix = $db->config['prefix'];
+		$db->config['prefix'] = $this->cookie . '_';
+
+		ConnectionManager::create('test_suite', $db->config);
+		$db->config['prefix'] = $_prefix;
+
+		// Get db connection
+		$this->db =& ConnectionManager::getDataSource('test_suite');
+		$this->db->cacheSources  = false;
+
+		ClassRegistry::config(array('ds' => 'test_suite'));
 	}
 }
