@@ -12,9 +12,9 @@ class SeleniumTestManager extends TestManager {
 	function _getTestsPath($type = 'cases') {
 		if (!empty($this->appTest)) {
 			if ($type == 'cases') {
-				$result = TESTS . 'selenium' . DS . 'cases' . DS;
+				$result = TESTS . 'selenium' . DS . 'cases';
 			} else if ($type == 'groups') {
-				$result = TESTS . 'selenium' . DS . 'groups' . DS;
+				$result = TESTS . 'selenium' . DS . 'groups';
 			}
 		} else if (!empty($this->pluginTest)) {
 			$_pluginBasePath = APP . 'plugins' . DS . $this->pluginTest . DS . 'tests';
