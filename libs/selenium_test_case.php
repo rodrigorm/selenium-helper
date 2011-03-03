@@ -14,6 +14,7 @@ class SeleniumTestCase extends CakeTestCase {
 			'port'    => 4444,
 			'speed'   => $this->_getSpeed()
 		);
+		Configure::load('selenium');
 		$settings = Configure::read('Selenium');
 		if (!is_array($settings)) {
 			$settings = array();

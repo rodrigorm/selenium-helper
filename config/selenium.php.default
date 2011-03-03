@@ -1,0 +1,8 @@
+<?php
+$config['Selenium'] = array(
+	'browser' => '*firefox', // Browser to test, can be changed per test
+	'url'     => 'http://localhost.localdomain:8888/', // Application base url
+	'host'    => 'localhost', // Selenium RC host
+	'port'    => 4444, // Selenium RC port
+	'speed'   => false // Speed for each command step
+);
