@@ -5,6 +5,13 @@ class SeleniumController extends AppController {
 	public $helpers = array('Html', 'Selenium.Selenium');
 	public $uses = array();
 
+	function beforeFilter() {
+		if (isset($this->Auth)) {
+			$this->Auth->allow('index', 'testcase', 'cookie');
+		}
+		parent::beforeFilter();
+	}
+
 	function index() {
 		$this->layout = 'testsuite';
 		$testcases =& SeleniumTestManager::getTestCaseList();
