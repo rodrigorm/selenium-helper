@@ -48,6 +48,7 @@ class SeleniumTestCase extends CakeTestCase {
 				$this->selenium->setSpeed($this->settings['speed']);
 			}
 			$this->selenium->open('/selenium/selenium/cookie/' . $this->cookie);
+			$this->selenium->waitForPageToLoad();
 			$this->assertTrue($this->selenium->isCookiePresent('selenium'));
 			$this->assertTrue($this->selenium->isTextPresent('Cookie created'));
 			$this->assertEqual($this->selenium->getCookieByName('selenium'), $this->cookie);
