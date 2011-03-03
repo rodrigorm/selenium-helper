@@ -8,18 +8,26 @@ class SeleniumTestCase extends CakeTestCase {
 
 	function start() {
 		$defaults = array(
-			'browser' => $this->_getBrowser(),
-			'url'     => $this->_getUrl(),
-			'host'    => $this->_getHost(),
+			'browser' => '*firefox',
+			'url'     => 'http://localhost:8888/',
+			'host'    => 'localhost',
 			'port'    => 4444,
-			'speed'   => $this->_getSpeed()
+			'speed'   => false
 		);
 		Configure::load('selenium');
 		$settings = Configure::read('Selenium');
 		if (!is_array($settings)) {
 			$settings = array();
 		}
-		$this->settings = array_merge($defaults, $settings);
+		$shell = array(
+			'browser' => $this->_getBrowser(),
+			'url'     => $this->_getUrl(),
+			'host'    => $this->_getHost(),
+			'port'    => 4444,
+			'speed'   => $this->_getSpeed()
+		);
+		$shell = array_filter($shell);
+		$this->settings = array_merge($defaults, $settings, $shell);
 		return parent::start();
 	}
 
@@ -49,11 +57,11 @@ class SeleniumTestCase extends CakeTestCase {
 	}
 
 	function _getBrowser() {
-		return $this->_getArg('browser', '*firefox');
+		return $this->_getArg('browser', false);
 	}
 
 	function _getUrl() {
-		return $this->_getArg('url', 'http://localhost:8888/');
+		return $this->_getArg('url', false);
 	}
 
 	function _getSpeed() {
@@ -61,7 +69,7 @@ class SeleniumTestCase extends CakeTestCase {
 	}
 
 	function _getHost() {
-		return $this->_getArg('host', 'localhost');
+		return $this->_getArg('host', false);
 	}
 
 	function _getArg($name, $default = '') {
